@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10008782e8641a841b64c56433148f99, type: 3}
+  m_Name: Boss
+  m_EditorClassIdentifier: Assembly-CSharp::WaveData
+  enemyGroups:
+  - enemyPrefab: {fileID: 5691700206706758156, guid: b275d97a634e30147be443bb9ee6b6f7, type: 3}
+    count: 1
+  spawnInterval: 1
+  timeBeforeWave: 40
+  waveDuration: 300
