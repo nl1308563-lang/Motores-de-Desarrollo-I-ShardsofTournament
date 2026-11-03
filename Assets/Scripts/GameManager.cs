@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static bool IsPaused { get; private set; } = false;
 
+
     [Header("UI Panels")]
     public GameObject HUD;
     public GameObject gameOverUI;
