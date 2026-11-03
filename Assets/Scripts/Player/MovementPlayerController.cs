@@ -203,9 +203,19 @@ public class MovementPlayerController : MonoBehaviour
 
         if (animator != null)
         {
-            animator.SetFloat("MoveX", moveInput.x);
-            animator.SetFloat("MoveZ", moveInput.y);
+            // Multiplicamos el input por el multiplicador de velocidad actual (si corre, será mayor a 1)
+            float speedMultiplier = 1f;
+            bool isAiming = (cameraController != null && cameraController.IsAiming);
+
+            if (sprintHeld && !isAiming && !IsCrouching && isGrounded && moveInput.sqrMagnitude > 0.01f)
+            {
+                speedMultiplier = sprintSpeed / walkSpeed; // Escala proporcionalmente para llegar a la zona de correr en el Blend Tree
+            }
+
+            animator.SetFloat("MoveX", moveInput.x * speedMultiplier);
+            animator.SetFloat("MoveZ", moveInput.y * speedMultiplier);
             animator.SetBool("IsCrouching", IsCrouching);
+            animator.SetBool("IsGrounded", isGrounded);
         }
     }
 
