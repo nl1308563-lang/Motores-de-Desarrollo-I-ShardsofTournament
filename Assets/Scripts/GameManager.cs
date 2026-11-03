@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -105,6 +106,13 @@ public class GameManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        StartCoroutine(ResumeDelay());
+    }
+
+    private IEnumerator ResumeDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+
         IsPaused = false;
         Time.timeScale = 1f;
 
@@ -128,6 +136,13 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        StartCoroutine(RestartDelay());
+    }
+
+    private IEnumerator RestartDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+
         IsPaused = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -142,6 +157,13 @@ public class GameManager : MonoBehaviour
 
     public void MainMenu()
     {
+        StartCoroutine(MainMenuDelay());
+    }
+
+    private IEnumerator MainMenuDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+
         IsPaused = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
@@ -149,6 +171,13 @@ public class GameManager : MonoBehaviour
 
     public void QuitGame()
     {
+        StartCoroutine(QuitDelay());
+    }
+
+    private IEnumerator QuitDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+
         Application.Quit();
     }
 }
