@@ -17051,7 +17051,7 @@ Mesh:
     m_Center: {x: -0.010997772, y: 1.4850705, z: 5.999998}
     m_Extent: {x: 4.260966, y: 2.0149295, z: 6.499998}
   m_MeshUsageFlags: 0
-  m_CookingOptions: 30
+  m_CookingOptions: -1
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   'm_MeshMetrics[0]': 1.0084378
@@ -23622,7 +23622,7 @@ GameObject:
   - component: {fileID: 1548668945}
   - component: {fileID: 1548668944}
   - component: {fileID: 1548668943}
-  - component: {fileID: 1548668942}
+  - component: {fileID: 1548668948}
   m_Layer: 3
   m_Name: Structure One
   m_TagString: Untagged
@@ -23630,28 +23630,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &1548668942
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1548668941}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 742138450}
 --- !u!33 &1548668943
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -27069,6 +27047,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 65622841}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &1548668948
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548668941}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: -1
+  m_Mesh: {fileID: 742138450}
 --- !u!1 &1584891769
 GameObject:
   m_ObjectHideFlags: 0
