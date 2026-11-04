@@ -125,4 +125,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d88ca932724ac4d42a2f14da32bbc9c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopInteractable
-  interactionDistance: 5
