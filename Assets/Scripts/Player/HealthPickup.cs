@@ -5,6 +5,10 @@ public class HealthPickup : MonoBehaviour
     [Header("Configuración de Curación")]
     public float healAmount = 25f;
 
+    [Header("Audio")]
+    [Tooltip("Sonido que se reproduce al recoger el botiquín")]
+    public AudioClip pickupSound;
+
     [Header("Efecto Visual (Opcional)")]
     public float rotationSpeed = 50f;
     public float floatSpeed = 2f;
@@ -25,11 +29,11 @@ public class HealthPickup : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other)
-    {        
+    {
         PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
         if (playerHealth == null)
         {
-            playerHealth = other.GetComponentInParent<PlayerHealth>();
+            playerHealth = other.GetComponentInChildren<PlayerHealth>();
         }
 
         if (playerHealth != null)
@@ -38,6 +42,13 @@ public class HealthPickup : MonoBehaviour
             if (!playerHealth.isDead && playerHealth.currentHealth < playerHealth.maxHealth)
             {
                 playerHealth.Heal(healAmount);
+
+                // Reproducir sonido de recogida
+                if (pickupSound != null)
+                {
+                    AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+                }
+
                 Debug.Log($"¡Botiquín recogido! Curado: {healAmount} de salud.");
                 Destroy(gameObject); // Se consume el botiquín
             }

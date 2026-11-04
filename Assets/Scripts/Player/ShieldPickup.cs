@@ -5,6 +5,10 @@ public class ShieldPickup : MonoBehaviour
     [Header("Configuración de Escudo")]
     public float shieldAmount = 25f; // Cantidad de escudo que recarga
 
+    [Header("Audio")]
+    [Tooltip("Sonido que se reproduce al recoger el escudo")]
+    public AudioClip pickupSound;
+
     [Header("Efecto Visual (Opcional)")]
     public float rotationSpeed = 50f;
     public float floatSpeed = 2f;
@@ -44,6 +48,13 @@ public class ShieldPickup : MonoBehaviour
             if (playerShield.currentShield < playerShield.maxShield)
             {
                 playerShield.RechargeShield(shieldAmount);
+
+                // Reproducir sonido de recogida si está asignado
+                if (pickupSound != null)
+                {
+                    AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+                }
+
                 Debug.Log($"¡Escudo recogido! Recargado: {shieldAmount} de escudo.");
                 Destroy(gameObject); // Se consume el objeto
             }

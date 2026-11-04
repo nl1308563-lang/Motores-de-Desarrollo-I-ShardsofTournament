@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\WaveSpawner.cs" />
     <Compile Include="Assets\Scripts\Player\Weapon\ShootingSystem.cs" />
     <Compile Include="Assets\Models\Kevin Iglesias\Human Animations\Unity Demo Scenes\Human Soldier Animations\Scripts\HumanSoldierController.cs" />
+    <Compile Include="Assets\SimpleCollectiblesPack\SimpleCollectibleScript.cs" />
     <Compile Include="Assets\Scripts\Player\Weapon\WeaponRecoil.cs" />
     <Compile Include="Assets\Scripts\Player\HealthPickup.cs" />
     <Compile Include="Assets\Scripts\WaveUIController.cs" />
