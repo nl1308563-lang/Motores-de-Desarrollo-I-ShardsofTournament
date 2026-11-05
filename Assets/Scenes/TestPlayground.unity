@@ -12193,6 +12193,9 @@ MonoBehaviour:
   reloadTime: 1
   currentAmmo: 90
   playerHealth: {fileID: 1299347298}
+  audioSource: {fileID: 155725311}
+  reloadSound: {fileID: 8300000, guid: ce82f86e2f968d443954e08075684a6b, type: 3}
+  reloadVolume: 1
 --- !u!114 &155725303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16194,6 +16197,9 @@ MonoBehaviour:
   reloadTime: 3
   currentAmmo: 90
   playerHealth: {fileID: 1299347298}
+  audioSource: {fileID: 397098269}
+  reloadSound: {fileID: 8300000, guid: ce82f86e2f968d443954e08075684a6b, type: 3}
+  reloadVolume: 1
 --- !u!114 &397098261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17639,6 +17645,9 @@ MonoBehaviour:
   reloadTime: 1
   currentAmmo: 90
   playerHealth: {fileID: 1299347298}
+  audioSource: {fileID: 535839765}
+  reloadSound: {fileID: 8300000, guid: ce82f86e2f968d443954e08075684a6b, type: 3}
+  reloadVolume: 1
 --- !u!114 &535839757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19724,6 +19733,9 @@ MonoBehaviour:
   reloadTime: 2
   currentAmmo: 0
   playerHealth: {fileID: 1299347298}
+  audioSource: {fileID: 809283105}
+  reloadSound: {fileID: 8300000, guid: ce82f86e2f968d443954e08075684a6b, type: 3}
+  reloadVolume: 1
 --- !u!114 &809283099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37109,6 +37121,9 @@ MonoBehaviour:
   reloadTime: 0.5
   currentAmmo: 90
   playerHealth: {fileID: 1299347298}
+  audioSource: {fileID: 1867883485}
+  reloadSound: {fileID: 8300000, guid: ce82f86e2f968d443954e08075684a6b, type: 3}
+  reloadVolume: 1
 --- !u!114 &1867883483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37723,6 +37738,9 @@ MonoBehaviour:
   reloadTime: 2.5
   currentAmmo: 0
   playerHealth: {fileID: 1299347298}
+  audioSource: {fileID: 1926967212}
+  reloadSound: {fileID: 8300000, guid: ce82f86e2f968d443954e08075684a6b, type: 3}
+  reloadVolume: 1
 --- !u!114 &1926967211
 MonoBehaviour:
   m_ObjectHideFlags: 0
