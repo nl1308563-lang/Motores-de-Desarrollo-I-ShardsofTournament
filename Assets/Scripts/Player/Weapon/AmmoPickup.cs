@@ -6,6 +6,10 @@ public class AmmoPickup : MonoBehaviour
     public AmmoType ammoType;
     public int ammoAmount = 30;
 
+    [Header("Audio")]
+    [Tooltip("Sonido que se reproduce al recoger la munición")]
+    public AudioClip pickupSound;
+
     [Header("Efecto Visual (Opcional)")]
     public float rotationSpeed = 50f;
     public float floatSpeed = 2f;
@@ -26,28 +30,34 @@ public class AmmoPickup : MonoBehaviour
         transform.position = new Vector3(transform.position.x, newY, transform.position.z);
     }
 
-   void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-    PlayerAmmoInventory playerInventory = other.GetComponent<PlayerAmmoInventory>();
+        PlayerAmmoInventory playerInventory = other.GetComponent<PlayerAmmoInventory>();
 
-    if (playerInventory == null)
-    {
-        playerInventory = other.GetComponentInParent<PlayerAmmoInventory>();
-    }
-
-    if (playerInventory != null)
+        if (playerInventory == null)
         {
-        // Intenta añadir la munición y nos dice cuántas pildoras/cohetes se añadieron realmente
-        int amountAdded = playerInventory.AddAmmo(ammoType, ammoAmount);
+            playerInventory = other.GetComponentInParent<PlayerAmmoInventory>();
+        }
 
-        if (amountAdded > 0)
+        if (playerInventory != null)
+        {
+            // Intenta añadir la munición y nos dice cuántas unidades se añadieron realmente
+            int amountAdded = playerInventory.AddAmmo(ammoType, ammoAmount);
+
+            if (amountAdded > 0)
             {
-            Debug.Log($"¡Recogiste {amountAdded} unidades de munición para {ammoType}!");         
-            Destroy(gameObject);
+                // Reproducir sonido de recogida si está asignado
+                if (pickupSound != null)
+                {
+                    AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+                }
+
+                Debug.Log($"¡Recogiste {amountAdded} unidades de munición para {ammoType}!");
+                Destroy(gameObject);
             }
-        else
+            else
             {
-            Debug.Log($"Reserva de {ammoType} está al máximo ({playerInventory.GetMaxReserveAmmo(ammoType)}). Caja no recogida.");
+                Debug.Log($"Reserva de {ammoType} está al máximo ({playerInventory.GetMaxReserveAmmo(ammoType)}). Caja no recogida.");
             }
         }
     }

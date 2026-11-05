@@ -21,6 +21,11 @@ public class WeaponAmmo : MonoBehaviour
     private PlayerAmmoInventory playerInventory;
     private PlayerInputActions inputActions;
 
+    [Header("Audio de Recarga")]
+    public AudioSource audioSource;
+    public AudioClip reloadSound;
+    [Range(0f, 1f)] public float reloadVolume = 1f;
+
     public bool IsReloading => isReloading;
 
     private void Awake()
@@ -44,6 +49,11 @@ public class WeaponAmmo : MonoBehaviour
         if (playerHealth == null)
         {
             playerHealth = GetComponentInParent<PlayerHealth>();
+        }
+
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
         }
     }
 
@@ -102,6 +112,11 @@ public class WeaponAmmo : MonoBehaviour
     {
         isReloading = true;
         Debug.Log($"Recargando {ammoType}...");
+
+        if (audioSource != null && reloadSound != null)
+        {
+            audioSource.PlayOneShot(reloadSound, reloadVolume);
+        }
 
         yield return new WaitForSeconds(reloadTime);
 

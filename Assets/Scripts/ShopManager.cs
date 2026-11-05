@@ -1,6 +1,3 @@
-
-
-
 using UnityEngine;
 using TMPro;
 using System.Collections;
@@ -74,9 +71,9 @@ public class ShopManager : MonoBehaviour
     public float greedIncomingDamageMultiplier = 1.8f;
 
     [Header("Precio de Munición")]
-    
+
     [SerializeField] private int mediumAmmoPrice = 90;
-    
+
 
     private bool isShopOpen = false;
 
@@ -411,8 +408,6 @@ public class ShopManager : MonoBehaviour
     {
         BuyAmmo(AmmoType.Rocket, 10, mediumAmmoPrice);
     }
-
-   
 
     private void UpdateShopUI()
     {

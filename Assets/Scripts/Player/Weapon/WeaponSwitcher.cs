@@ -127,6 +127,17 @@ public class WeaponSwitcher : MonoBehaviour
                 selectedWeapon = index;
                 SelectWeapon();
             }
+
+            Animator playerAnimator = GetComponentInParent<Animator>();
+            if (playerAnimator == null)
+            {
+                playerAnimator = GetComponentInChildren<Animator>();
+            }
+
+            if (playerAnimator != null)
+            {
+                playerAnimator.SetBool("HasWeapon", true);
+            }
         }
     }
 

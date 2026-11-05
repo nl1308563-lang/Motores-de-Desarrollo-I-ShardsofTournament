@@ -28,6 +28,13 @@ public class ShootingSystem : MonoBehaviour
     public float tracerDuration = 0.04f;
     public LayerMask shootableMask;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip shootSound;
+    public AudioClip emptyClickSound;
+    [Range(0f, 1f)] public float shootVolume = 1f;
+    [Range(0f, 1f)] public float emptyClickVolume = 1f;
+
     private float nextFireTime = 0f;
     private bool isShootingBurst = false;
 
@@ -50,6 +57,11 @@ public class ShootingSystem : MonoBehaviour
 
         weaponAmmo = GetComponent<WeaponAmmo>();
         if (playerHealth == null) playerHealth = GetComponentInParent<PlayerHealth>();
+
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
     }
 
     void Update()
@@ -64,10 +76,17 @@ public class ShootingSystem : MonoBehaviour
             ? inputActions.Player.Fire.IsPressed()
             : inputActions.Player.Fire.WasPressedThisFrame();
 
+        bool isTriggerPressedThisFrame = inputActions.Player.Fire.WasPressedThisFrame();
+
         if (isTriggerPressed && Time.time >= nextFireTime)
         {
             if (weaponAmmo != null && !weaponAmmo.CanShoot())
             {
+                if (isTriggerPressedThisFrame && audioSource != null && emptyClickSound != null)
+                {
+                    audioSource.PlayOneShot(emptyClickSound, emptyClickVolume);
+                }
+
                 if (weaponAmmo.currentAmmo == 0) weaponAmmo.TryReload();
                 return;
             }
@@ -99,6 +118,11 @@ public class ShootingSystem : MonoBehaviour
         {
             if (weaponAmmo != null && !weaponAmmo.CanShoot())
             {
+                if (audioSource != null && emptyClickSound != null)
+                {
+                    audioSource.PlayOneShot(emptyClickSound, emptyClickVolume);
+                }
+
                 if (weaponAmmo.currentAmmo == 0) weaponAmmo.TryReload();
                 break;
             }
@@ -120,6 +144,11 @@ public class ShootingSystem : MonoBehaviour
     void Shoot()
     {
         if (mainCamera == null || firePoint == null) return;
+
+        if (audioSource != null && shootSound != null)
+        {
+            audioSource.PlayOneShot(shootSound, shootVolume);
+        }
 
         Ray cameraRay = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         Vector3 targetPoint;
@@ -153,7 +182,6 @@ public class ShootingSystem : MonoBehaviour
 
             if (enemyHealth != null)
             {
-                // Multiplicador de daño según las cargas acumuladas del Tanque
                 float finalDamage = damage;
                 if (ShopManager.Instance != null)
                 {

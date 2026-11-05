@@ -44,6 +44,13 @@ public class ShotgunShootingSystem : MonoBehaviour
     public float tracerDuration = 0.04f;
     public LayerMask shootableMask;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip shootSound;
+    public AudioClip emptyClickSound;
+    [Range(0f, 1f)] public float shootVolume = 1f;
+    [Range(0f, 1f)] public float emptyClickVolume = 1f;
+
     private float nextFireTime = 0f;
 
     public WeaponRecoil weaponRecoil;
@@ -64,6 +71,11 @@ public class ShotgunShootingSystem : MonoBehaviour
 
         weaponAmmo = GetComponent<WeaponAmmo>();
         if (playerHealth == null) playerHealth = GetComponentInParent<PlayerHealth>();
+
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
     }
 
     void Update()
@@ -82,6 +94,11 @@ public class ShotgunShootingSystem : MonoBehaviour
         {
             if (weaponAmmo != null && !weaponAmmo.CanShoot())
             {
+                if (audioSource != null && emptyClickSound != null)
+                {
+                    audioSource.PlayOneShot(emptyClickSound, emptyClickVolume);
+                }
+
                 if (weaponAmmo.currentAmmo == 0) weaponAmmo.TryReload();
                 return;
             }
@@ -93,6 +110,11 @@ public class ShotgunShootingSystem : MonoBehaviour
     private void ExecuteShotgunShot()
     {
         nextFireTime = Time.time + fireRate;
+
+        if (audioSource != null && shootSound != null)
+        {
+            audioSource.PlayOneShot(shootSound, shootVolume);
+        }
 
         ShootPellets();
 
@@ -137,13 +159,10 @@ public class ShotgunShootingSystem : MonoBehaviour
 
                     if (enemyHealth != null)
                     {
-                        // 1. Calcular distancia del impacto desde el punto de disparo
                         float hitDistance = fireHit.distance;
 
-                        // 2. Calcular el factor de daño según la distancia (de 1.0f a minDamagePercent)
                         float distanceFactor = CalculateDamageFalloff(hitDistance);
 
-                        // 3. Daño final por perdigón
                         float finalPelletDamage = damagePerPellet * distanceFactor * damageMultiplier;
 
                         enemyHealth.TakeDamage(finalPelletDamage);
@@ -158,19 +177,17 @@ public class ShotgunShootingSystem : MonoBehaviour
         }
     }
 
-    // Calcula cuánto daño conserva el disparo según la distancia de recorrido
     private float CalculateDamageFalloff(float distance)
     {
         if (distance <= minDamageDistance)
         {
-            return 1.0f; // 100% de daño a corta distancia
+            return 1.0f;
         }
         else if (distance >= maxDamageDistance)
         {
-            return minDamagePercent; // Daño mínimo/pésimo a larga distancia
+            return minDamagePercent;
         }
 
-        // Interpolación lineal progresiva entre la distancia mínima y máxima
         float t = (distance - minDamageDistance) / (maxDamageDistance - minDamageDistance);
         return Mathf.Lerp(1.0f, minDamagePercent, t);
     }
