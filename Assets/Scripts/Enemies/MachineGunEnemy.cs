@@ -1,3 +1,4 @@
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -26,11 +27,17 @@ public class MachineGunEnemy : MonoBehaviour
     private Transform playerTransform;
     private float nextFireTime = 0f;
 
+    // Animaciones
+    private Animator animator;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
 
+        animator = GetComponentInChildren<Animator>();
+
         GameObject playerObj = GameObject.FindGameObjectWithTag(playerTag);
+
         if (playerObj != null)
         {
             playerTransform = playerObj.transform;
@@ -48,9 +55,18 @@ public class MachineGunEnemy : MonoBehaviour
     {
         if (playerTransform == null) return;
 
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+        float distanceToPlayer = Vector3.Distance(
+            transform.position,
+            playerTransform.position
+        );
 
         agent.SetDestination(playerTransform.position);
+
+        // Animación de movimiento
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", agent.velocity.magnitude);
+        }
 
         if (distanceToPlayer <= shootingRange)
         {
@@ -66,12 +82,20 @@ public class MachineGunEnemy : MonoBehaviour
 
     void RotateTowardsPlayer()
     {
-        Vector3 direction = (playerTransform.position - transform.position).normalized;
+        Vector3 direction =
+            (playerTransform.position - transform.position).normalized;
+
         direction.y = 0;
+
         if (direction != Vector3.zero)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 8f);
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                lookRotation,
+                Time.deltaTime * 8f
+            );
         }
     }
 
@@ -79,8 +103,16 @@ public class MachineGunEnemy : MonoBehaviour
     {
         if (firePoint == null) return;
 
+        // Activar animación de disparo
+        if (animator != null)
+        {
+            animator.SetTrigger("Shoot");
+        }
+
         Vector3 targetCenter = playerTransform.position + Vector3.up * 1f;
-        Vector3 baseDirection = (targetCenter - firePoint.position).normalized;
+
+        Vector3 baseDirection =
+            (targetCenter - firePoint.position).normalized;
 
         Vector3 spreadDirection = baseDirection + new Vector3(
             Random.Range(-bulletSpread, bulletSpread),
@@ -90,14 +122,23 @@ public class MachineGunEnemy : MonoBehaviour
 
         Vector3 endPoint;
 
-        if (Physics.Raycast(firePoint.position, spreadDirection, out RaycastHit hit, shootingRange, collisionLayers))
+        if (Physics.Raycast(
+            firePoint.position,
+            spreadDirection,
+            out RaycastHit hit,
+            shootingRange,
+            collisionLayers))
         {
             endPoint = hit.point;
 
-            // Buscar PlayerShield primero, y PlayerHealth como respaldo en el objeto impactado o padres
-            PlayerShield playerShield = hit.collider.GetComponent<PlayerShield>();
-            if (playerShield == null) playerShield = hit.collider.GetComponentInParent<PlayerShield>();
-            if (playerShield == null) playerShield = hit.collider.GetComponentInChildren<PlayerShield>();
+            PlayerShield playerShield =
+                hit.collider.GetComponent<PlayerShield>();
+
+            if (playerShield == null)
+                playerShield = hit.collider.GetComponentInParent<PlayerShield>();
+
+            if (playerShield == null)
+                playerShield = hit.collider.GetComponentInChildren<PlayerShield>();
 
             if (playerShield != null)
             {
@@ -105,9 +146,14 @@ public class MachineGunEnemy : MonoBehaviour
             }
             else
             {
-                PlayerHealth playerHealth = hit.collider.GetComponent<PlayerHealth>();
-                if (playerHealth == null) playerHealth = hit.collider.GetComponentInParent<PlayerHealth>();
-                if (playerHealth == null) playerHealth = hit.collider.GetComponentInChildren<PlayerHealth>();
+                PlayerHealth playerHealth =
+                    hit.collider.GetComponent<PlayerHealth>();
+
+                if (playerHealth == null)
+                    playerHealth = hit.collider.GetComponentInParent<PlayerHealth>();
+
+                if (playerHealth == null)
+                    playerHealth = hit.collider.GetComponentInChildren<PlayerHealth>();
 
                 if (playerHealth != null)
                 {
@@ -117,12 +163,17 @@ public class MachineGunEnemy : MonoBehaviour
 
             if (impactEffect != null)
             {
-                Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                Instantiate(
+                    impactEffect,
+                    hit.point,
+                    Quaternion.LookRotation(hit.normal)
+                );
             }
         }
         else
         {
-            endPoint = firePoint.position + spreadDirection * shootingRange;
+            endPoint =
+                firePoint.position + spreadDirection * shootingRange;
         }
 
         if (muzzleFlash != null)
@@ -132,7 +183,9 @@ public class MachineGunEnemy : MonoBehaviour
 
         if (lineRenderer != null)
         {
-            StartCoroutine(ShowTracer(firePoint.position, endPoint));
+            StartCoroutine(
+                ShowTracer(firePoint.position, endPoint)
+            );
         }
     }
 
