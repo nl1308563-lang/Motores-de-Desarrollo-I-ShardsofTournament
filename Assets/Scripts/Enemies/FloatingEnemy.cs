@@ -17,8 +17,15 @@ public class FloatingEnemy : MonoBehaviour
     [Header("Referencias")]
     public string playerTag = "Player";
 
+    [Header("Audio de Movimiento")]
+    public AudioSource moveAudioSource;
+    public AudioClip moveSound;
+    [Range(0f, 1f)] public float moveVolume = 1f;
+    public float movementThreshold = 0.01f;
+
     private Transform playerTransform;
     private float nextAttackTime = 0f;
+    private Vector3 lastPosition;
 
     void Start()
     {
@@ -26,6 +33,20 @@ public class FloatingEnemy : MonoBehaviour
         if (playerObj != null)
         {
             playerTransform = playerObj.transform;
+        }
+
+        lastPosition = transform.position;
+
+        if (moveAudioSource == null)
+        {
+            moveAudioSource = GetComponent<AudioSource>();
+        }
+
+        if (moveAudioSource != null && moveSound != null)
+        {
+            moveAudioSource.clip = moveSound;
+            moveAudioSource.loop = true;
+            moveAudioSource.volume = moveVolume;
         }
     }
 
@@ -47,6 +68,28 @@ public class FloatingEnemy : MonoBehaviour
         // 2. Efecto visual de Flotación (Onda Sinusoidal)
         float hoverOffsetY = Mathf.Sin(Time.time * floatFrequency) * floatAmplitude;
         transform.position += Vector3.up * hoverOffsetY * Time.deltaTime;
+
+        // Control de audio de movimiento según la distancia recorrida real
+        float currentSpeed = Vector3.Distance(transform.position, lastPosition) / Time.deltaTime;
+        lastPosition = transform.position;
+
+        if (moveAudioSource != null && moveSound != null)
+        {
+            if (currentSpeed > movementThreshold)
+            {
+                if (!moveAudioSource.isPlaying)
+                {
+                    moveAudioSource.Play();
+                }
+            }
+            else
+            {
+                if (moveAudioSource.isPlaying)
+                {
+                    moveAudioSource.Stop();
+                }
+            }
+        }
 
         // 3. Orientación hacia el jugador
         Vector3 lookDir = (playerTransform.position - transform.position).normalized;

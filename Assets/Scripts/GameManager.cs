@@ -18,6 +18,15 @@ public class GameManager : MonoBehaviour
     [Header("Referencias del Jugador")]
     public GameObject player;
 
+    [Header("Audio de Fin de Partida")]
+    public AudioClip gameOverSound;
+    [Range(0f, 1f)] public float gameOverVolume = 1f;
+    public AudioClip winSound;
+    [Range(0f, 1f)] public float winVolume = 1f;
+
+    [Header("Audio de Música")]
+    public AudioSource musicAudioSource;
+
     private PlayerInputActions inputActions;
 
     private void Awake()
@@ -125,6 +134,17 @@ public class GameManager : MonoBehaviour
         if (gameOverUI != null) gameOverUI.SetActive(true);
         if (HUD != null) HUD.SetActive(false);
         Time.timeScale = 0f;
+
+        if (gameOverSound != null)
+        {
+            // Reproduce el sonido exactamente en la posición de la cámara pero asegurando centro estéreo
+            AudioSource.PlayClipAtPoint(gameOverSound, Camera.main != null ? Camera.main.transform.position : Vector3.zero, gameOverVolume);
+        }
+
+        if (musicAudioSource != null)
+        {
+            musicAudioSource.Stop();
+        }
     }
 
     public void Win()
@@ -132,6 +152,16 @@ public class GameManager : MonoBehaviour
         if (winUI != null) winUI.SetActive(true);
         if (HUD != null) HUD.SetActive(false);
         Time.timeScale = 0f;
+
+        if (winSound != null)
+        {
+            AudioSource.PlayClipAtPoint(winSound, Camera.main != null ? Camera.main.transform.position : Vector3.zero, winVolume);
+        }
+
+        if (musicAudioSource != null)
+        {
+            musicAudioSource.Stop();
+        }
     }
 
     public void RestartGame()

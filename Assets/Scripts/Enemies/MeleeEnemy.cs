@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,6 +11,11 @@ public class MeleeEnemy : MonoBehaviour
 
     [Header("Referencias")]
     public string playerTag = "Player";
+
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip attackSound;
+    [Range(0f, 1f)] public float attackVolume = 1f;
 
     private NavMeshAgent agent;
     private Transform playerTransform;
@@ -44,6 +48,11 @@ public class MeleeEnemy : MonoBehaviour
         }
 
         agent.stoppingDistance = attackRange - 0.2f;
+
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
     }
 
     void Update()
@@ -113,6 +122,11 @@ public class MeleeEnemy : MonoBehaviour
 
         if (!isDead)
         {
+            if (audioSource != null && attackSound != null)
+            {
+                audioSource.PlayOneShot(attackSound, attackVolume);
+            }
+
             // Atacamos primero al escudo si existe.
             if (playerShield != null)
             {
