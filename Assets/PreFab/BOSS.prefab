@@ -158,11 +158,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09fb159bfdf854b4cb129a60eecc2952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 666
+  maxHealth: 1000
   currentHealth: 0
   isDead: 0
   deathParticlePrefab: {fileID: 0}
-  coinReward: 15
+  coinReward: 100
 --- !u!114 &2333299022159942476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 686a30f4f5e1a2343963b3902e70b050, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  flySpeed: 7
+  flySpeed: 8
   hoverHeight: 10
   preferredDistance: 18
   floatFrequency: 2
