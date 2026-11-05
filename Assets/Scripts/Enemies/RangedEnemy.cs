@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -5,23 +6,34 @@ using UnityEngine.AI;
 public class RangedEnemy : MonoBehaviour
 {
     [Header("Ajustes de Disparo")]
-    public float shootingRange = 12f;   // Distancia a la que se detiene para disparar
-    public float fireRate = 1.5f;       // Tiempo entre disparos
-    public GameObject projectilePrefab; // Prefab de la bala/proyectil
-    public Transform firePoint;        // Punto de salida de la bala
+    public float shootingRange = 12f;
+    public float fireRate = 1.5f;
+    public GameObject projectilePrefab;
+    public Transform firePoint;
 
     [Header("Referencias")]
     public string playerTag = "Player";
 
     private NavMeshAgent agent;
     private Transform playerTransform;
+    private Animator animator;
+
     private float nextFireTime = 0f;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
 
+        // Buscar el Animator en el modelo hijo.
+        animator = GetComponentInChildren<Animator>();
+
+        if (animator == null)
+        {
+            Debug.LogWarning("RangedEnemy: No se encontró un Animator.", this);
+        }
+
         GameObject playerObj = GameObject.FindGameObjectWithTag(playerTag);
+
         if (playerObj != null)
         {
             playerTransform = playerObj.transform;
@@ -32,14 +44,24 @@ public class RangedEnemy : MonoBehaviour
 
     void Update()
     {
-        if (playerTransform == null) return;
+        if (playerTransform == null)
+        {
+            UpdateAnimationSpeed();
+            return;
+        }
 
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+        float distanceToPlayer = Vector3.Distance(
+            transform.position,
+            playerTransform.position
+        );
 
-        // Ir hacia el jugador
+        // Ir hacia el jugador.
         agent.SetDestination(playerTransform.position);
 
-        // Si está en rango de tiro
+        // Actualizar Idle / Run.
+        UpdateAnimationSpeed();
+
+        // Si está en rango de tiro.
         if (distanceToPlayer <= shootingRange)
         {
             RotateTowardsPlayer();
@@ -52,14 +74,31 @@ public class RangedEnemy : MonoBehaviour
         }
     }
 
+    void UpdateAnimationSpeed()
+    {
+        if (animator == null || agent == null)
+            return;
+
+        animator.SetFloat("Speed", agent.velocity.magnitude);
+    }
+
     void RotateTowardsPlayer()
     {
-        Vector3 direction = (playerTransform.position - transform.position).normalized;
+        Vector3 direction = (
+            playerTransform.position - transform.position
+        ).normalized;
+
         direction.y = 0;
+
         if (direction != Vector3.zero)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 8f);
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                lookRotation,
+                Time.deltaTime * 8f
+            );
         }
     }
 
@@ -67,12 +106,26 @@ public class RangedEnemy : MonoBehaviour
     {
         if (projectilePrefab != null && firePoint != null)
         {
-            // Apuntar directamente al centro del jugador (altura del pecho)
+            // Reproducir animación de disparo.
+            if (animator != null)
+            {
+                animator.SetTrigger("Shoot");
+            }
+
+            // Apuntar al centro del jugador.
             Vector3 targetPosition = playerTransform.position + Vector3.up * 1f;
-            Vector3 shootDirection = (targetPosition - firePoint.position).normalized;
+
+            Vector3 shootDirection = (
+                targetPosition - firePoint.position
+            ).normalized;
 
             Quaternion shootRotation = Quaternion.LookRotation(shootDirection);
-            Instantiate(projectilePrefab, firePoint.position, shootRotation);
+
+            Instantiate(
+                projectilePrefab,
+                firePoint.position,
+                shootRotation
+            );
         }
     }
 

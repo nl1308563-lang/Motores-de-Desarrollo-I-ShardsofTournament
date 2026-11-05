@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,19 +15,30 @@ public class MeleeEnemy : MonoBehaviour
 
     private NavMeshAgent agent;
     private Transform playerTransform;
-    private PlayerShield playerShield; // Cambiado a PlayerShield
-    private PlayerHealth playerHealth; // Respaldo opcional
+    private PlayerShield playerShield;
+    private PlayerHealth playerHealth;
+    private Animator animator;
+
     private float nextAttackTime = 0f;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
 
+        // Buscamos el Animator del modelo hijo.
+        animator = GetComponentInChildren<Animator>();
+
+        if (animator == null)
+        {
+            Debug.LogWarning("MeleeEnemy: No se encontró un Animator en sus hijos.", this);
+        }
+
         GameObject playerObj = GameObject.FindGameObjectWithTag(playerTag);
+
         if (playerObj != null)
         {
             playerTransform = playerObj.transform;
-            // Buscamos primero el escudo y también la salud por respaldo
+
             playerShield = playerObj.GetComponent<PlayerShield>();
             playerHealth = playerObj.GetComponent<PlayerHealth>();
         }
@@ -36,11 +48,21 @@ public class MeleeEnemy : MonoBehaviour
 
     void Update()
     {
-        if (playerTransform == null) return;
+        if (playerTransform == null)
+        {
+            UpdateAnimationSpeed();
+            return;
+        }
 
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+        float distanceToPlayer = Vector3.Distance(
+            transform.position,
+            playerTransform.position
+        );
 
         agent.SetDestination(playerTransform.position);
+
+        // Actualizamos la animación según el movimiento real.
+        UpdateAnimationSpeed();
 
         if (distanceToPlayer <= attackRange)
         {
@@ -54,34 +76,59 @@ public class MeleeEnemy : MonoBehaviour
         }
     }
 
+    void UpdateAnimationSpeed()
+    {
+        if (animator == null || agent == null)
+            return;
+
+        float speed = agent.velocity.magnitude;
+
+        animator.SetFloat("Speed", speed);
+    }
+
     void RotateTowardsPlayer()
     {
-        Vector3 direction = (playerTransform.position - transform.position).normalized;
+        Vector3 direction = (
+            playerTransform.position - transform.position
+        ).normalized;
+
         direction.y = 0;
+
         if (direction != Vector3.zero)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                lookRotation,
+                Time.deltaTime * 10f
+            );
         }
     }
 
     void Attack()
     {
-        // Validar si el jugador no está muerto antes de atacar
+        // Validar si el jugador no está muerto antes de atacar.
         bool isDead = playerHealth != null && playerHealth.isDead;
 
         if (!isDead)
         {
-            // Atacamos primero al escudo si existe; si no, directamente a la vida
+            // Atacamos primero al escudo si existe.
             if (playerShield != null)
             {
                 playerShield.TakeDamage(attackDamage);
-                Debug.Log($"¡MeleeEnemy atacó el escudo del jugador con {attackDamage} de daño!");
+
+                Debug.Log(
+                    $"¡MeleeEnemy atacó el escudo del jugador con {attackDamage} de daño!"
+                );
             }
             else if (playerHealth != null)
             {
                 playerHealth.TakeDamage(attackDamage);
-                Debug.Log($"¡MeleeEnemy atacó la vida directa del jugador con {attackDamage} de daño!");
+
+                Debug.Log(
+                    $"¡MeleeEnemy atacó la vida directa del jugador con {attackDamage} de daño!"
+                );
             }
         }
     }
